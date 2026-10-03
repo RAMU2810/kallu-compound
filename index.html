@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Kallu Compound</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <header class="navbar">
+
+        <div class="logo">
+
+            <div class="tree">🌴</div>
+
+            <div>
+                <h2>KALLU</h2>
+                <span>COMPOUND</span>
+            </div>
+
+        </div>
+
+        <nav>
+
+            <a href="#">Home</a>
+            <a href="#register">Register</a>
+            <a href="#price">Price</a>
+            <a href="#availability">Availability</a>
+            <a href="#location">Location</a>
+            <a href="#timing">Timing</a>
+
+        </nav>
+
+    </header>
+
+
+    <!-- HERO SECTION -->
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <p class="small-title">WELCOME TO</p>
+
+            <h1>
+                KALLU<br>
+                COMPOUND
+            </h1>
+
+            <p>
+                Experience the traditional taste of fresh toddy
+                in a friendly and comfortable atmosphere.
+            </p>
+
+            <a href="#price" class="button">VIEW PRICE</a>
+
+        </div>
+
+    </section>
+
+
+    <!-- ABOUT SECTION -->
+
+    <section class="about">
+
+        <h2>TRADITIONAL TASTE</h2>
+
+        <p>
+            Kallu Compound brings you the traditional taste of
+            fresh toddy with a simple and welcoming atmosphere.
+            Our goal is to provide a comfortable place where
+            people can enjoy authentic local flavors.
+        </p>
+
+    </section>
+
+
+    <!-- PRICE SECTION -->
+
+    <section id="price" class="price-section">
+
+        <h2>OUR PRICES</h2>
+
+        <div class="price-container">
+
+            <!-- FRESH TODDY -->
+
+            <div class="price-card">
+
+                <h3>FRESH TODDY</h3>
+
+                <p class="price" id="freshToddyPrice">
+                    ₹0
+                </p>
+
+                <span>Per Glass</span>
+
+                <p id="freshToddyAvailability">
+                    Checking availability...
+                </p>
+
+            </div>
+
+
+            <!-- SPECIAL TODDY -->
+
+            <div class="price-card">
+
+                <h3>SPECIAL TODDY</h3>
+
+                <p class="price" id="specialToddyPrice">
+                    ₹0
+                </p>
+
+                <span>Per Glass</span>
+
+                <p id="specialToddyAvailability">
+                    Checking availability...
+                </p>
+
+            </div>
+
+
+            <!-- FAMILY PACK -->
+
+            <div class="price-card">
+
+                <h3>FAMILY PACK</h3>
+
+                <p class="price" id="familyPackPrice">
+                    ₹0
+                </p>
+
+                <span>Special Pack</span>
+
+                <p id="familyPackAvailability">
+                    Checking availability...
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- AVAILABILITY -->
+
+    <section id="availability" class="availability">
+
+        <h2>AVAILABILITY</h2>
+
+        <div class="available-box">
+
+
+            <!-- FRESH TODDY -->
+
+            <div>
+
+                <h3>🌴 Fresh Toddy</h3>
+
+                <p id="freshToddyStatus">
+                    Checking...
+                </p>
+
+            </div>
+
+
+            <!-- SPECIAL TODDY -->
+
+            <div>
+
+                <h3>🥥 Special Toddy</h3>
+
+                <p id="specialToddyStatus">
+                    Checking...
+                </p>
+
+            </div>
+
+
+            <!-- FAMILY PACK -->
+
+            <div>
+
+                <h3>📦 Family Pack</h3>
+
+                <p id="familyPackStatus">
+                    Checking...
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- LOCATION & TIMING -->
+
+    <section class="info">
+
+
+        <!-- LOCATION -->
+
+        <div id="location" class="info-box">
+
+            <h2>📍 LOCATION</h2>
+
+            <p>
+
+                Kallu Compound,<br>
+
+                Bachoodu Village, Near Substation Road,<br>
+
+                Thirumalayapalem, Khammam, Telangana, India.
+
+            </p>
+
+        </div>
+
+
+        <!-- TIMING -->
+
+        <div id="timing" class="info-box">
+
+            <h2>🕐 TIMING</h2>
+
+            <p>
+                Monday - Sunday
+            </p>
+
+            <p>
+                Opening: 10:00 AM
+            </p>
+
+            <p>
+                Closing: 10:00 PM
+            </p>
+
+            <h3 id="shopStatus">
+                Checking...
+            </h3>
+
+        </div>
+
+    </section>
+
+
+    <!-- CUSTOMER REGISTRATION -->
+
+    <section id="register" class="contact">
+
+        <h2>CUSTOMER REGISTRATION</h2>
+
+        <p>
+            Please register before visiting the Kallu Compound.
+        </p>
+
+
+        <div class="contact-form">
+
+
+            <!-- CUSTOMER NAME -->
+
+            <input
+                type="text"
+                id="customerName"
+                placeholder="Enter your name"
+            >
+
+
+            <!-- MOBILE NUMBER -->
+
+            <input
+                type="tel"
+                id="customerMobile"
+                placeholder="Enter your mobile number"
+            >
+
+
+            <!-- DESCRIPTION -->
+
+            <textarea
+                id="customerDescription"
+                placeholder="Enter your description"
+                rows="5"
+            ></textarea>
+
+
+            <!-- REGISTER BUTTON -->
+
+            <button onclick="registerCustomer()">
+                REGISTER
+            </button>
+
+
+            <!-- REGISTRATION MESSAGE -->
+
+            <p id="registrationMessage"></p>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- CUSTOMER FEEDBACK -->
+
+    <section id="feedback" class="contact">
+
+        <h2>CUSTOMER FEEDBACK</h2>
+
+        <p>
+            Tell us about your experience.
+        </p>
+
+
+        <div class="contact-form">
+
+
+            <!-- SELECT REGISTERED CUSTOMER -->
+
+            <select id="feedbackCustomer">
+
+                <option value="">
+                    Select your name
+                </option>
+
+            </select>
+
+
+            <!-- RATING -->
+
+            <select id="feedbackRating">
+
+                <option value="">
+                    Select Rating
+                </option>
+
+                <option value="5">
+                    ⭐⭐⭐⭐⭐ - Excellent
+                </option>
+
+                <option value="4">
+                    ⭐⭐⭐⭐ - Very Good
+                </option>
+
+                <option value="3">
+                    ⭐⭐⭐ - Good
+                </option>
+
+                <option value="2">
+                    ⭐⭐ - Average
+                </option>
+
+                <option value="1">
+                    ⭐ - Poor
+                </option>
+
+            </select>
+
+
+            <!-- FEEDBACK -->
+
+            <textarea
+                id="feedbackMessage"
+                placeholder="Enter your feedback"
+                rows="5"
+            ></textarea>
+
+
+            <!-- FEEDBACK BUTTON -->
+
+            <button onclick="submitFeedback()">
+                SUBMIT FEEDBACK
+            </button>
+
+
+            <!-- FEEDBACK STATUS -->
+
+            <p id="feedbackStatus"></p>
+
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <div class="footer-logo">
+            🌴 KALLU COMPOUND
+        </div>
+
+        <p>
+            Traditional Taste • Fresh Toddy • Good Times
+        </p>
+
+        <p class="copyright">
+            © 2026 Kallu Compound. All Rights Reserved.
+        </p>
+
+    </footer>
+
+
+    <!-- JAVASCRIPT -->
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

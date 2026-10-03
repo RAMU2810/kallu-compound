@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Kallu Compound - Admin</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ===============================
+         ADMIN LOGIN
+    ================================ -->
+
+    <section id="loginSection" class="admin-login">
+
+        <h1>KALLU COMPOUND</h1>
+
+        <h2>ADMIN LOGIN</h2>
+
+        <input
+            type="text"
+            id="username"
+            placeholder="Username"
+        >
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Password"
+        >
+
+        <button onclick="adminLogin()">
+            LOGIN
+        </button>
+
+        <p id="loginMessage"></p>
+
+    </section>
+
+
+    <!-- ===============================
+         ADMIN DASHBOARD
+    ================================ -->
+
+    <div id="dashboardSection" style="display: none;">
+
+        <!-- NAVBAR -->
+
+        <header class="navbar">
+
+            <div class="logo">
+
+                <div class="tree">🌴</div>
+
+                <div>
+                    <h2>KALLU</h2>
+                    <span>COMPOUND</span>
+                </div>
+
+            </div>
+
+            <nav>
+
+                <a href="index.html">
+                    Website
+                </a>
+
+                <button onclick="logout()">
+                    LOGOUT
+                </button>
+
+            </nav>
+
+        </header>
+
+
+        <!-- DASHBOARD -->
+
+        <section class="admin-dashboard">
+
+            <h1>ADMIN DASHBOARD</h1>
+
+            <p>
+                Customer registrations, feedback,
+                price and availability management
+            </p>
+
+
+            <!-- ===============================
+                 REGISTERED CUSTOMERS
+            ================================ -->
+
+            <div class="admin-section">
+
+                <h2>REGISTERED CUSTOMERS</h2>
+
+                <button onclick="loadCustomers()">
+                    LOAD CUSTOMERS
+                </button>
+
+                <div id="customerTable">
+                    Loading...
+                </div>
+
+            </div>
+
+
+            <!-- ===============================
+                 CUSTOMER FEEDBACK
+            ================================ -->
+
+            <div class="admin-section">
+
+                <h2>CUSTOMER FEEDBACK</h2>
+
+                <button onclick="loadFeedback()">
+                    LOAD FEEDBACK
+                </button>
+
+                <div id="feedbackTable">
+                    Loading...
+                </div>
+
+            </div>
+
+
+            <!-- ===============================
+                 PRICE MANAGEMENT
+            ================================ -->
+
+            <div class="admin-section">
+
+                <h2>PRICE MANAGEMENT</h2>
+
+                <label>Select Product:</label>
+
+                <select id="priceProduct">
+
+                    <option value="1">
+                        Fresh Toddy
+                    </option>
+
+                    <option value="2">
+                        Special Toddy
+                    </option>
+
+                    <option value="3">
+                        Family Pack
+                    </option>
+
+                </select>
+
+                <br><br>
+
+                <label>New Price:</label>
+
+                <input
+                    type="number"
+                    id="newPrice"
+                    placeholder="Enter new price"
+                >
+
+                <button onclick="updatePrice()">
+                    UPDATE PRICE
+                </button>
+
+                <p id="priceMessage"></p>
+
+            </div>
+
+
+            <!-- ===============================
+                 AVAILABILITY MANAGEMENT
+            ================================ -->
+
+            <div class="admin-section">
+
+                <h2>AVAILABILITY MANAGEMENT</h2>
+
+                <label>Select Product:</label>
+
+                <select id="availabilityProduct">
+
+                    <option value="1">
+                        Fresh Toddy
+                    </option>
+
+                    <option value="2">
+                        Special Toddy
+                    </option>
+
+                    <option value="3">
+                        Family Pack
+                    </option>
+
+                </select>
+
+                <br><br>
+
+                <label>Select Availability:</label>
+
+                <select id="availabilityStatus">
+
+                    <option value="true">
+                        Available
+                    </option>
+
+                    <option value="false">
+                        Not Available
+                    </option>
+
+                </select>
+
+                <br><br>
+
+                <button onclick="updateAvailability()">
+                    UPDATE AVAILABILITY
+                </button>
+
+                <p id="availabilityMessage"></p>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <!-- ===============================
+         JAVASCRIPT
+    ================================ -->
+
+    <script>
+
+        // =====================================
+        // BACKEND URL
+        // =====================================
+
+        const API_BASE_URL = "http://127.0.0.1:8080";
+
+
+        // =====================================
+        // CHECK ADMIN SESSION
+        // =====================================
+
+        function checkAdminSession() {
+
+            fetch(
+                API_BASE_URL + "/api/admin/check",
+                {
+                    method: "GET",
+                    credentials: "include"
+                }
+            )
+
+            .then(response => {
+
+                console.log(
+                    "Session check status:",
+                    response.status
+                );
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "No active session"
+                    );
+
+                }
+
+                return response.text();
+
+            })
+
+            .then(result => {
+
+                console.log(
+                    "Session result:",
+                    result
+                );
+
+                if (result === "Admin authenticated") {
+
+                    document.getElementById("loginSection")
+                        .style.display = "none";
+
+                    document.getElementById("dashboardSection")
+                        .style.display = "block";
+
+                    loadCustomers();
+
+                    loadFeedback();
+
+                }
+
+            })
+
+            .catch(error => {
+
+                console.log(
+                    "No active admin session."
+                );
+
+                document.getElementById("loginSection")
+                    .style.display = "block";
+
+                document.getElementById("dashboardSection")
+                    .style.display = "none";
+
+            });
+
+        }
+
+
+        // =====================================
+        // ADMIN LOGIN
+        // =====================================
+
+        function adminLogin() {
+
+            let username =
+                document.getElementById("username").value;
+
+            let password =
+                document.getElementById("password").value;
+
+
+            if (username === "" || password === "") {
+
+                document.getElementById("loginMessage").innerText =
+                    "Please enter username and password.";
+
+                return;
+            }
+
+
+            fetch(
+                API_BASE_URL + "/api/admin/login",
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    credentials: "include",
+
+                    body: JSON.stringify({
+
+                        username: username,
+                        password: password
+
+                    })
+
+                }
+            )
+
+            .then(response => {
+
+                console.log(
+                    "Login status:",
+                    response.status
+                );
+
+                return response.text();
+
+            })
+
+            .then(result => {
+
+                console.log(
+                    "Login result:",
+                    result
+                );
+
+                if (result === "Login successful") {
+
+                    document.getElementById("loginSection")
+                        .style.display = "none";
+
+                    document.getElementById("dashboardSection")
+                        .style.display = "block";
+
+                    loadCustomers();
+
+                    loadFeedback();
+
+                }
+
+                else {
+
+                    document.getElementById("loginMessage")
+                        .innerText =
+                        "Invalid username or password.";
+
+                }
+
+            })
+
+            .catch(error => {
+
+                console.log(
+                    "Login Error:",
+                    error
+                );
+
+                document.getElementById("loginMessage")
+                    .innerText =
+                    "Unable to connect to server.";
+
+            });
+
+        }
+
+
+        // =====================================
+        // LOGOUT
+        // =====================================
+
+        function logout() {
+
+            fetch(
+                API_BASE_URL + "/api/admin/logout",
+                {
+                    method: "POST",
+                    credentials: "include"
+                }
+            )
+
+            .then(response => response.text())
+
+            .then(result => {
+
+                alert(result);
+
+                document.getElementById("dashboardSection")
+                    .style.display = "none";
+
+                document.getElementById("loginSection")
+                    .style.display = "block";
+
+                document.getElementById("username").value = "";
+
+                document.getElementById("password").value = "";
+
+                document.getElementById("loginMessage").innerText = "";
+
+                document.getElementById("customerTable")
+                    .innerHTML = "Loading...";
+
+                document.getElementById("feedbackTable")
+                    .innerHTML = "Loading...";
+
+            })
+
+            .catch(error => {
+
+                console.log(
+                    "Logout Error:",
+                    error
+                );
+
+                alert("Logout failed.");
+
+            });
+
+        }
+
+
+        // =====================================
+        // LOAD CUSTOMERS
+        // =====================================
+
+        function loadCustomers() {
+
+            fetch(
+                API_BASE_URL + "/api/customers",
+                {
+                    credentials: "include"
+                }
+            )
+
+            .then(response => {
+
+                console.log(
+                    "Customers status:",
+                    response.status
+                );
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Unable to load customers"
+                    );
+
+                }
+
+                return response.json();
+
+            })
+
+            .then(data => {
+
+                let html = `
+
+                    <table border="1">
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Name</th>
+
+                            <th>Mobile</th>
+
+                            <th>Description</th>
+
+                        </tr>
+
+                `;
+
+
+                for (
+                    let i = 0;
+                    i < data.length;
+                    i++
+                ) {
+
+                    html += `
+
+                        <tr>
+
+                            <td>
+                                ${data[i].id}
+                            </td>
+
+                            <td>
+                                ${data[i].name}
+                            </td>
+
+                            <td>
+                                ${data[i].mobile}
+                            </td>
+
+                            <td>
+                                ${data[i].description}
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }
+
+
+                html += `</table>`;
+
+
+                document.getElementById("customerTable")
+                    .innerHTML = html;
+
+            })
+
+            .catch(error => {
+
+                console.log(
+                    "Customer Error:",
+                    error
+                );
+
+                document.getElementById("customerTable")
+                    .innerHTML =
+                    "Failed to load customers.";
+
+            });
+
+        }
+
+
+        // =====================================
+        // LOAD FEEDBACK
+        // =====================================
+
+        function loadFeedback() {
+
+            fetch(
+                API_BASE_URL + "/api/feedback",
+                {
+                    credentials: "include"
+                }
+            )
+
+            .then(response => {
+
+                console.log(
+                    "Feedback status:",
+                    response.status
+                );
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Unable to load feedback"
+                    );
+
+                }
+
+                return response.json();
+
+            })
+
+            .then(feedbackData => {
+
+                return fetch(
+                    API_BASE_URL + "/api/customers",
+                    {
+                        credentials: "include"
+                    }
+                )
+
+                .then(response => {
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            "Unable to load customers"
+                        );
+
+                    }
+
+                    return response.json();
+
+                })
+
+                .then(customerData => {
+
+                    let html = `
+
+                        <table border="1">
+
+                            <tr>
+
+                                <th>ID</th>
+
+                                <th>Name</th>
+
+                                <th>Rating</th>
+
+                                <th>Feedback</th>
+
+                            </tr>
+
+                    `;
+
+
+                    for (
+                        let i = 0;
+                        i < feedbackData.length;
+                        i++
+                    ) {
+
+                        let customer =
+                            customerData.find(
+                                c =>
+                                    c.id ===
+                                    feedbackData[i].customerId
+                            );
+
+
+                        let customerName =
+                            customer
+                                ? customer.name
+                                : "Unknown";
+
+
+                        html += `
+
+                            <tr>
+
+                                <td>
+                                    ${feedbackData[i].id}
+                                </td>
+
+                                <td>
+                                    ${customerName}
+                                </td>
+
+                                <td>
+                                    ${feedbackData[i].rating}
+                                </td>
+
+                                <td>
+                                    ${feedbackData[i].message}
+                                </td>
+
+                            </tr>
+
+                        `;
+
+                    }
+
+
+                    html += `</table>`;
+
+
+                    document.getElementById("feedbackTable")
+                        .innerHTML = html;
+
+                });
+
+            })
+
+            .catch(error => {
+
+                console.log(
+                    "Feedback Error:",
+                    error
+                );
+
+                document.getElementById("feedbackTable")
+                    .innerHTML =
+                    "Failed to load feedback.";
+
+            });
+
+        }
+
+
+        // =====================================
+        // UPDATE PRICE
+        // =====================================
+
+        function updatePrice() {
+
+            let productId =
+                document.getElementById(
+                    "priceProduct"
+                ).value;
+
+            let newPrice =
+                document.getElementById(
+                    "newPrice"
+                ).value;
+
+
+            if (newPrice === "") {
+
+                document.getElementById("priceMessage")
+                    .innerText =
+                    "Please enter a price.";
+
+                return;
+            }
+
+
+            fetch(
+                API_BASE_URL + "/api/toddy/"
+                + productId
+                + "?price="
+                + newPrice,
+                {
+                    method: "PUT",
+                    credentials: "include"
+                }
+            )
+
+            .then(response => {
+
+                console.log(
+                    "Price update status:",
+                    response.status
+                );
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Unable to update price"
+                    );
+
+                }
+
+                return response.json();
+
+            })
+
+            .then(data => {
+
+                document.getElementById("priceMessage")
+                    .innerText =
+                    data.name +
+                    " price updated to ₹" +
+                    data.price;
+
+                document.getElementById("newPrice").value = "";
+
+            })
+
+            .catch(error => {
+
+                console.log(
+                    "Price Update Error:",
+                    error
+                );
+
+                document.getElementById("priceMessage")
+                    .innerText =
+                    "Failed to update price.";
+
+            });
+
+        }
+
+
+        // =====================================
+        // UPDATE AVAILABILITY
+        // =====================================
+
+        function updateAvailability() {
+
+            let productId =
+                document.getElementById(
+                    "availabilityProduct"
+                ).value;
+
+
+            let available =
+                document.getElementById(
+                    "availabilityStatus"
+                ).value;
+
+
+            fetch(
+                API_BASE_URL + "/api/toddy/"
+                + productId
+                + "/availability?available="
+                + available,
+                {
+                    method: "PUT",
+                    credentials: "include"
+                }
+            )
+
+            .then(response => {
+
+                console.log(
+                    "Availability update status:",
+                    response.status
+                );
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Unable to update availability"
+                    );
+
+                }
+
+                return response.json();
+
+            })
+
+            .then(data => {
+
+                let status =
+                    data.available
+                        ? "Available"
+                        : "Not Available";
+
+
+                document.getElementById(
+                    "availabilityMessage"
+                ).innerText =
+                    data.name +
+                    " is now " +
+                    status;
+
+            })
+
+            .catch(error => {
+
+                console.log(
+                    "Availability Update Error:",
+                    error
+                );
+
+                document.getElementById(
+                    "availabilityMessage"
+                ).innerText =
+                    "Failed to update availability.";
+
+            });
+
+        }
+
+
+        // =====================================
+        // CHECK SESSION WHEN PAGE LOADS
+        // =====================================
+
+        checkAdminSession();
+
+    </script>
+
+</body>
+
+</html>
